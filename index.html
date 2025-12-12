@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Nhà Của Khánh</title>
+<style>
+    body{font-family:Arial;margin:0;background:#f4f6f9;}
+    .page{max-width:420px;margin:15px auto;background:white;padding:20px;border-radius:16px;box-shadow:0 0 8px #999;}
+    h2,h3{color:#003b73;margin-bottom:10px}
+    input{width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;margin:5px 0;}
+    button{width:100%;padding:12px;border:none;border-radius:10px;background:#003b73;color:white;margin:10px 0;font-size:16px}
+    .item{padding:10px;background:#e9f1ff;border-radius:12px;margin:7px 0;}
+    .row-btn{display:flex;gap:10px;margin-top:8px}
+    .formula{background:#fff4d3;border-left:4px solid #ffb300;padding:8px;margin:8px 0;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- ======================= LOGIN ======================= -->
+<div id="loginPage" class="page">
+    <h2>WELCOME TO NHÀ CỦA KHÁNH</h2>
+    <input id="tk" placeholder="Tài khoản">
+    <input id="mk" type="password" placeholder="Mật khẩu">
+    <button onclick="login()">ĐĂNG NHẬP</button>
+</div>
+
+<!-- ======================= CƠ SỞ ======================= -->
+<div id="coSoPage" class="page" style="display:none">
+    <h2>Quản lý Cơ Sở</h2>
+    <input id="csName" placeholder="Tên cơ sở...">
+    <button onclick="addCoSo()">THÊM CƠ SỞ</button>
+    <div id="listCoSo"></div>
+    <button onclick="logout()">ĐĂNG XUẤT</button>
+</div>
+
+<!-- ======================= TẦNG ======================= -->
+<div id="tangPage" class="page" style="display:none">
+    <h2>Quản lý Tầng</h2>
+    <div id="csTitle"></div>
+    <input id="soTang" placeholder="Số tầng (vd: 4)">
+    <button onclick="taoTang()">TẠO TẦNG</button>
+    <div id="listTang"></div>
+    <button onclick="showCoSo()">⬅ Quay lại</button>
+</div>
+
+<!-- ======================= PHÒNG ======================= -->
+<div id="phongPage" class="page" style="display:none">
+    <h2>Quản lý Phòng</h2>
+    <div id="tangTitle"></div>
+    <input id="phongName" placeholder="Tên phòng">
+    <button onclick="addPhong()">THÊM PHÒNG</button>
+    <div id="listPhong"></div>
+    <button onclick="showTang()">⬅ Quay lại</button>
+</div>
+
+<!-- ======================= THÔNG TIN KHÁCH ======================= -->
+<div id="khachPage" class="page" style="display:none">
+    <h2>Thông tin khách</h2>
+
+    <h3>I. Thông tin cơ bản</h3>
+    <input id="tenKhach" placeholder="Họ tên">
+    <input id="sdtKhach" placeholder="Số điện thoại">
+    <input id="soNguoi" placeholder="Số người" type="number">
+    <input id="soXe" placeholder="Số xe" type="number">
+    <input id="thoiHan" placeholder="Thời hạn hợp đồng (tháng)" type="number">
+    <input id="ngayBd" type="date">
+    <input id="tienPhong" placeholder="Tiền phòng" type="number">
+    <input id="tienCoc" placeholder="Tiền cọc" type="number">
+
+    <hr>
+
+    <h3>II. Tiền điện phòng</h3>
+    <div class="formula">
+        Công thức: (Số mới - Số cũ) × Giá
+    </div>
+    <input id="dienCu" placeholder="Số cũ" type="number">
+    <input id="dienMoi" placeholder="Số mới" type="number">
+    <input id="giaDien" placeholder="Giá điện" type="number" value="3500">
+
+    <h3>III. Điện chung</h3>
+    <div class="formula">
+        Đồng hồ tổng = Tổng mới - Tổng cũ  
+        Điện chung = (Đồng hồ tổng - Tổng điện phòng) × Giá / Tổng người
+    </div>
+    <input id="tongCu" placeholder="Tổng cũ" type="number">
+    <input id="tongMoi" placeholder="Tổng mới" type="number">
+    <input id="giaChung" placeholder="Giá điện chung" value="3500" type="number">
+
+    <h3>IV. Dịch vụ</h3>
+    <div class="formula">
+        Tiền DV = 100.000 + (Nước + Rác + Giặt + Sấy + Lọc + Vệ sinh) × Số người
+    </div>
+    <input id="nuoc" placeholder="Tiền nước/người" type="number">
+    <input id="rac" placeholder="Tiền rác/người" type="number">
+    <input id="giat" placeholder="Tiền giặt/người" type="number">
+    <input id="say" placeholder="Tiền sấy/người" type="number">
+    <input id="loc" placeholder="Lọc nước/người" type="number">
+    <input id="vs" placeholder="Vệ sinh/người" type="number">
+
+    <button onclick="saveKhach()">LƯU + TÍNH TIỀN</button>
+    <button onclick="showPhong()">⬅ Quay lại</button>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("db") || `{"coSo":{}}`);
+let currentCS = "", currentTang = "", currentPhong = "";
+let isAdmin = false;
+
+// GENERAL
+function saveDB(){localStorage.setItem("db", JSON.stringify(data));}
+function show(id){ document.querySelectorAll(".page").forEach(p=>p.style.display="none"); document.getElementById(id).style.display="block"; }
+
+// LOGIN
+function login(){
+    let tk = tk.value, mk = mk.value;
+
+    if(tk==="nhacuakhanh" && mk==="giakhanh0311"){
+        isAdmin = true;
+        showCoSo();
+        return;
+    }
+
+    for(let cs in data.coSo){
+        for(let t in data.coSo[cs].tang){
+            for(let p in data.coSo[cs].tang[t].phong){
+                let k = data.coSo[cs].tang[t].phong[p].khach;
+                if(k && k.sdt == mk){
+                    isAdmin = false;
+                    currentCS=cs; currentTang=t; currentPhong=p;
+                    loadKhach(k);
+                    show("khachPage");
+                    return;
+                }
+            }
+        }
+    }
+    alert("Sai thông tin đăng nhập!");
+}
+
+// LOGOUT
+function logout(){location.reload();}
+
+// ==================== CƠ SỞ ====================
+function showCoSo(){show("coSoPage"); renderCoSo();}
+function addCoSo(){
+    let cs = csName.value.trim();
+    if(!cs)return;
+    data.coSo[cs]={tang:{}};
+    saveDB(); renderCoSo();
+}
+function renderCoSo(){
+    listCoSo.innerHTML="";
+    for(let cs in data.coSo){
+        listCoSo.innerHTML += `
+            <div class="item">
+                <b>${cs}</b>
+                <div class="row-btn">
+                    <button onclick="openTang('${cs}')">Mở</button>
+                    <button onclick="deleteCoSo('${cs}')">Xóa</button>
+                </div>
+            </div>`;
+    }
+}
+function deleteCoSo(cs){delete data.coSo[cs]; saveDB(); renderCoSo();}
+function openTang(cs){currentCS = cs; showTang();}
+
+// ==================== TẦNG ====================
+function showTang(){
+    show("tangPage");
+    csTitle.innerHTML = "<b>Cơ sở: "+currentCS+"</b>";
+    renderTang();
+}
+function taoTang(){
+    let sl = +soTang.value;
+    if(sl<=0)return;
+    for(let i=1;i<=sl;i++){
+        data.coSo[currentCS].tang["Tầng "+i] = { phong:{} };
+    }
+    saveDB(); renderTang();
+}
+function renderTang(){
+    listTang.innerHTML="";
+    let t = data.coSo[currentCS].tang;
+    for(let name in t){
+        listTang.innerHTML += `
+            <div class="item">
+                <b>${name}</b>
+                <div class="row-btn">
+                    <button onclick="openPhong('${name}')">Mở</button>
+                    <button onclick="deleteTang('${name}')">Xóa</button>
+                </div>
+            </div>`;
+    }
+}
+function deleteTang(t){delete data.coSo[currentCS].tang[t]; saveDB(); renderTang();}
+function openPhong(t){currentTang=t; showPhong();}
+
+// ==================== PHÒNG ====================
+function showPhong(){
+    show("phongPage");
+    tangTitle.innerHTML = "<b>"+currentTang+"</b>";
+    renderPhong();
+}
+function addPhong(){
+    let p = phongName.value;
+    if(!p)return;
+    data.coSo[currentCS].tang[currentTang].phong[p]={khach:null};
+    saveDB(); renderPhong();
+}
+function renderPhong(){
+    listPhong.innerHTML="";
+    let ph = data.coSo[currentCS].tang[currentTang].phong;
+    for(let p in ph){
+        listPhong.innerHTML+=`
+            <div class="item">
+                <b>${p}</b>
+                <div class="row-btn">
+                    <button onclick="openKhach('${p}')">Mở</button>
+                    <button onclick="deletePhong('${p}')">Xóa</button>
+                </div>
+            </div>`;
+    }
+}
+function deletePhong(p){delete data.coSo[currentCS].tang[currentTang].phong[p]; saveDB(); renderPhong();}
+function openKhach(p){
+    currentPhong=p;
+    let k = data.coSo[currentCS].tang[currentTang].phong[p].khach;
+    if(k) loadKhach(k);
+    show("khachPage");
+}
+
+// ==================== KHÁCH ====================
+function loadKhach(k){
+    for(let id in k){
+        if(document.getElementById(id)) document.getElementById(id).value = k[id];
+    }
+}
+
+function saveKhach(){
+    let k = {
+        tenKhach: tenKhach.value,
+        sdt: sdtKhach.value,
+        soNguoi: +soNguoi.value,
+        soXe: soXe.value,
+        thoiHan: thoiHan.value,
+        ngayBd: ngayBd.value,
+        tienPhong: +tienPhong.value,
+        tienCoc: tienCoc.value,
+
+        dienCu:+dienCu.value, dienMoi:+dienMoi.value, giaDien:+giaDien.value,
+        tongCu:+tongCu.value, tongMoi:+tongMoi.value, giaChung:+giaChung.value,
+
+        nuoc:+nuoc.value, rac:+rac.value, giat:+giat.value,
+        say:+say.value, loc:+loc.value, vs:+vs.value
+    };
+
+    // TÍNH điện phòng
+    let dienPhong = (k.dienMoi - k.dienCu) * k.giaDien;
+
+    // TỔNG điện phòng của cơ sở
+    let tongDienPhong = 0, tongNguoi = 0;
+    let cs = data.coSo[currentCS].tang;
+    for(let t in cs){
+        for(let p in cs[t].phong){
+            let kh = cs[t].phong[p].khach;
+            if(kh){
+                tongDienPhong += (kh.dienMoi - kh.dienCu);
+                tongNguoi += (+kh.soNguoi);
+            }
+        }
+    }
+
+    let dongHoTong = (k.tongMoi - k.tongCu);
+    let dienChung = (dongHoTong - tongDienPhong) * k.giaChung / tongNguoi;
+
+    let dv = 100000 + (k.nuoc + k.rac + k.giat + k.say + k.loc + k.vs) * k.soNguoi;
+
+    let tongTien = k.tienPhong + dv + dienChung * k.soNguoi + dienPhong;
+
+    alert("Tổng tiền: " + tongTien.toLocaleString() + "đ");
+
+    // LƯU
+    data.coSo[currentCS].tang[currentTang].phong[currentPhong].khach = k;
+    saveDB();
+}
+
+</script>
+
+</body>
+</html>
