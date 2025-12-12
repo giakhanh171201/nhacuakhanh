@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nhà của Khánh - Standalone</title>
+  <style>
+    :root{--bg:#e9f3ef;--card:#fff;--accent:#0b754c;--accent-2:#095d3f;--muted:#6b7b73;--danger:#e04b4b;--radius:14px}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:var(--bg);color:#06221a}
+    .wrap{max-width:420px;margin:0 auto;padding:14px}
+    .page{display:none}
+    .page.active{display:block}
+    .card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(6,20,12,0.06)}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px}
+    h1{font-size:18px;margin:0}
+    .lead{color:var(--muted);font-size:13px}
+    input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e6;font-size:14px}
+    button{background:var(--accent);color:white;padding:12px;border-radius:12px;border:0;font-weight:600}
+    .btn-ghost{background:#f6f6f6;color:#000;padding:10px;border-radius:10px;border:0}
+    .small{font-size:13px;color:var(--muted)}
+    .row{display:flex;gap:8px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;border:1px dashed #eee;margin-top:8px}
+    .btns{display:flex;gap:6px}
+    .formula{font-size:13px;background:#fbfffb;padding:10px;border-radius:10px;border-left:4px solid var(--accent);}    
+    footer{margin-top:8px;text-align:center;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- LOGIN PAGE -->
+    <div id="page-login" class="page active">
+      <div class="card" style="display:flex;gap:12px;align-items:center">
+        <div class="logo">NK</div>
+        <div style="flex:1">
+          <h1>WELCOME TO NHÀ CỦA KHÁNH</h1>
+          <div class="lead">Đăng nhập để quản lý hoặc xem thông tin khách</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="small">Chọn chế độ</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="mode-admin" class="btn-ghost">Admin</button>
+          <button id="mode-guest" class="btn-ghost">Khách</button>
+        </div>
+
+        <div id="form-admin" style="margin-top:12px;display:none">
+          <input id="admin-user" placeholder="Tài khoản" />
+          <div style="height:8px"></div>
+          <input id="admin-pass" placeholder="Mật khẩu" type="password" />
+          <div style="height:10px"></div>
+          <button id="login-admin">Đăng nhập</button>
+        </div>
+
+        <div id="form-guest" style="margin-top:12px;display:none">
+          <input id="guest-phone" placeholder="Số điện thoại" inputmode="numeric" />
+          <div style="height:10px"></div>
+          <button id="login-guest">Đăng nhập</button>
+        </div>
+
+        <div id="login-msg" class="small" style="margin-top:8px;color:var(--danger)"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="logo">NK</div>
+          <div><h1 id="dash-title">Quản lý - Nhà của Khánh</h1><div class="small">Mobile first • Bo tròn • Xanh đậm</div></div>
+        </div>
+        <div><button id="btn-logout" class="btn-ghost">Đăng xuất</button></div>
+      </div>
+
+      <div class="card">
+        <h3>Đồng hồ tổng</h3>
+        <div class="row" style="margin-top:8px"><input id="tm-old" placeholder="Số cũ" inputmode="numeric"><input id="tm-new" placeholder="Số mới" inputmode="numeric"></div>
+        <div style="height:8px"></div>
+        <input id="tm-price" placeholder="Giá điện (VNĐ/số)" value="3000" />
+        <div style="height:8px"></div>
+        <button id="save-tm">Lưu</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const ADMIN_U='nhacuakhanh', ADMIN_P='giakhanh0311';
+
+    function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');}
+
+    $('mode-admin').onclick=()=>{ $('form-admin').style.display='block'; $('form-guest').style.display='none'; };
+    $('mode-guest').onclick=()=>{ $('form-admin').style.display='none'; $('form-guest').style.display='block'; };
+
+    $('login-admin').onclick=()=>{
+      if($('admin-user').value===ADMIN_U && $('admin-pass').value===ADMIN_P){
+        $('login-msg').textContent=''; show('page-dashboard');
+      } else $('login-msg').textContent='Sai tài khoản hoặc mật khẩu';
+    };
+
+    $('login-guest').onclick=()=>{
+      if(!$('guest-phone').value.trim())
+        $('login-msg').textContent='Nhập số điện thoại';
+      else $('login-msg').textContent='Chế độ khách chưa bật dữ liệu';
+    };
+
+    $('btn-logout').onclick=()=>show('page-login');
+
+    $('save-tm').onclick=()=>alert('Đã lưu');
+  </script>
+</body>
+</html>
