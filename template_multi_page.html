@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nhà của Khánh - Multi Page (Full)</title>
+  <style>
+    :root{--bg:#e9f3ef;--card:#fff;--accent:#0b754c;--accent-2:#095d3f;--muted:#6b7b73;--danger:#e04b4b;--radius:14px}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:var(--bg);color:#06221a}
+    .wrap{max-width:420px;margin:0 auto;padding:14px}
+    .page{display:none}
+    .page.active{display:block}
+    .card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(6,20,12,0.06)}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px}
+    h1{font-size:18px;margin:0}
+    .lead{color:var(--muted);font-size:13px}
+    input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e6;font-size:14px}
+    button{background:var(--accent);color:white;padding:12px;border-radius:12px;border:0;font-weight:600}
+    .btn-ghost{background:#f6f6f6;color:#000;padding:10px;border-radius:10px;border:0}
+    .small{font-size:13px;color:var(--muted)}
+    .row{display:flex;gap:8px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;border:1px dashed #eee;margin-top:8px}
+    .btns{display:flex;gap:6px}
+    .formula{font-size:13px;background:#fbfffb;padding:10px;border-radius:10px;border-left:4px solid var(--accent);}
+    footer{margin-top:8px;text-align:center;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- PAGE: LOGIN -->
+    <div id="page-login" class="page active">
+      <div class="card">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="logo">NK</div>
+          <div style="flex:1">
+            <h1>WELCOME TO NHÀ CỦA KHÁNH</h1>
+            <div class="lead">Đăng nhập để quản lý hoặc xem thông tin khách</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="small">Chọn chế độ</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="mode-admin" class="btn-ghost">Admin</button>
+          <button id="mode-guest" class="btn-ghost">Khách</button>
+        </div>
+
+        <div id="form-admin" style="margin-top:12px;display:none">
+          <input id="admin-user" placeholder="Tài khoản" />
+          <div style="height:8px"></div>
+          <input id="admin-pass" placeholder="Mật khẩu" type="password" />
+          <div style="height:10px"></div>
+          <button id="login-admin">Đăng nhập</button>
+        </div>
+
+        <div id="form-guest" style="margin-top:12px;display:none">
+          <input id="guest-phone" placeholder="Số điện thoại" inputmode="numeric" />
+          <div style="height:10px"></div>
+          <button id="login-guest">Đăng nhập</button>
+        </div>
+        <div id="login-msg" class="small" style="margin-top:8px;color:var(--danger)"></div>
+      </div>
+    </div>
+
+    <!-- PAGE: DASHBOARD (Admin) -->
+    <div id="page-dashboard" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:12px;align-items:center"><div class="logo">NK</div><div><h1 id="dash-title">Quản lý - Nhà của Khánh</h1><div class="small">Mobile first • Bo tròn • Xanh đậm</div></div></div>
+        <div style="text-align:right"><div class="small">Admin</div><div style="height:6px"></div><button id="btn-logout" class="btn-ghost">Đăng xuất</button></div>
+      </div>
+
+      <!-- Total meters -->
+      <div class="card">
+        <h3>Đồng hồ tổng (dùng để tính điện chung)</h3>
+        <div class="row" style="margin-top:8px"><input id="tm-old" placeholder="Đồng hồ tổng - cũ" inputmode="numeric"/><input id="tm-new" placeholder="Đồng hồ tổng - mới" inputmode="numeric"/></div>
+        <div style="height:8px"></div>
+        <input id="tm-price" placeholder="Giá điện (VNĐ/số)" value="3000" />
+        <div style="height:8px"></div>
+        <div style="display:flex;gap:8px"><button id="save-tm">Lưu đồng hồ</button><button id="nav-facilities" class="btn-ghost">Đi đến Cơ sở</button></div>
+      </div>
+
+      <div class="card">
+        <h3>Công thức tính tiền (tóm tắt)</h3>
+        <div class="formula"><strong>Tiền điện phòng</strong><br>=(Số mới - Số cũ) * Giá</div>
+        <div style="height:8px"></div>
+        <div class="formula"><strong>Tiền điện chung</strong><br>=(Đồng hồ tổng - Tổng điện phòng) * Giá / Tổng số người</div>
+        <div style="height:8px"></div>
+        <div class="formula"><strong>Tiền dịch vụ</strong><br>= Wifi/phòng + (Nước+Rác+Giặt+Sấy+Lọc+Vệ sinh) * Số người</div>
+      </div>
+    </div>
+
+    <!-- PAGE: Facilities -->
+    <div id="page-facilities" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Danh sách cơ sở</h3><div><button id="back-dash" class="btn-ghost">⬅</button></div></div>
+      <div class="card">
+        <input id="f-name" placeholder="Tên cơ sở" />
+        <div style="height:8px"></div>
+        <button id="f-add">Thêm cơ sở</button>
+      </div>
+      <div id="f-list"></div>
+    </div>
+
+    <!-- PAGE: Floors -->
+    <div id="page-floors" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Danh sách tầng</h3><div><button id="back-facilities" class="btn-ghost">⬅</button></div></div>
+      <div class="card">
+        <div class="small">Chọn cơ sở đang làm việc: <strong id="current-fac-name"></strong></div>
+        <div style="height:8px"></div>
+        <input id="floor-count" placeholder="Nhập số tầng (ví dụ 4)" inputmode="numeric" />
+        <div style="height:8px"></div>
+        <button id="f-add-floors">Tạo các tầng</button>
+      </div>
+      <div id="floor-list"></div>
+    </div>
+
+    <!-- PAGE: Rooms -->
+    <div id="page-rooms" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Danh sách phòng</h3><div><button id="back-floors" class="btn-ghost">⬅</button></div></div>
+      <div class="card">
+        <div class="small">Cơ sở: <strong id="room-fac"></strong> · Tầng: <strong id="room-floor"></strong></div>
+        <div style="height:8px"></div>
+        <input id="room-code" placeholder="Mã phòng (ví dụ 101)" />
+        <div style="height:8px"></div>
+        <button id="add-room">Thêm phòng</button>
+      </div>
+      <div id="room-list"></div>
+    </div>
+
+    <!-- PAGE: Customers -->
+    <div id="page-customers" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Quản lý khách</h3><div><button id="back-rooms" class="btn-ghost">⬅</button></div></div>
+      <div class="card">
+        <input id="c-name" placeholder="Họ tên" />
+        <div style="height:8px"></div>
+        <input id="c-phone" placeholder="Số điện thoại" inputmode="numeric" />
+        <div style="height:8px"></div>
+        <div class="row"><input id="c-people" placeholder="Số người" inputmode="numeric" /><input id="c-bikes" placeholder="Số xe" inputmode="numeric" /></div>
+        <div style="height:8px"></div>
+        <div class="row"><input id="c-contract" placeholder="Thời hạn hợp đồng (tháng)" inputmode="numeric" /><input id="c-start" placeholder="Ngày bắt đầu (YYYY-MM-DD)" /></div>
+        <div style="height:8px"></div>
+        <div class="row"><input id="c-roomprice" placeholder="Tiền phòng (VNĐ)" inputmode="numeric" /><input id="c-deposit" placeholder="Tiền cọc (VNĐ)" inputmode="numeric" /></div>
+        <div style="height:8px"></div>
+        <div class="small">Số điện cũ / mới</div>
+        <div class="row"><input id="c-elec-old" placeholder="Số cũ" inputmode="numeric"/><input id="c-elec-new" placeholder="Số mới" inputmode="numeric"/></div>
+        <div style="height:8px"></div>
+        <div class="small">Dịch vụ (mặc định)</div>
+        <div class="row"><input id="svc-wifi" placeholder="Wifi/phòng" value="100000"/><input id="svc-water" placeholder="Nước/người"/></div>
+        <div style="height:8px"></div>
+        <div class="row"><input id="svc-trash" placeholder="Rác/người"/><input id="svc-wash" placeholder="Giặt/người"/></div>
+        <div style="height:8px"></div>
+        <div class="row"><input id="svc-dry" placeholder="Sấy/người"/><input id="svc-filter" placeholder="Lọc nước/người"/></div>
+        <div style="height:8px"></div>
+        <div class="row"><input id="svc-clean" placeholder="Vệ sinh/người"/><select id="assign-room-select"><option value="">Gán phòng (tuỳ chọn)</option></select></div>
+        <div style="height:8px"></div>
+        <div style="display:flex;gap:8px"><button id="save-cust">Lưu khách</button><button id="export-json" class="btn-ghost">Sao lưu JSON</button></div>
+      </div>
+      <div id="cust-list"></div>
+    </div>
+
+    <!-- PAGE: Customer Detail -->
+    <div id="page-cust-detail" class="page">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center"><h3 id="cd-name" style="margin:0"></h3><div><button id="back-custs" class="btn-ghost">⬅</button></div></div>
+      <div id="cd-area"></div>
+    </div>
+
+    <footer class="small">Ứng dụng lưu trữ cục bộ bằng localStorage • Thiết kế mobile • Tùy chỉnh thêm yêu cầu báo tao làm tiếp</footer>
+  </div>
+
+  <script>
+    /* ---------- DB & utils ---------- */
+    const KEY='nh_ck_multi_v1';
+    let DB = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if(!DB.facilities) DB.facilities=[];
+    if(!DB.customers) DB.customers=[];
+    if(!DB.totalMeters) DB.totalMeters={old:0,new:0,price:3000};
+    function save(){ localStorage.setItem(KEY, JSON.stringify(DB)); }
+    const $ = id=>document.getElementById(id);
+    function fmt(v){return new Intl.NumberFormat('vi-VN').format(Number(v)||0)+' ₫';}
+
+    // Auth
+    const ADMIN_U='nhacuakhanh', ADMIN_P='giakhanh0311';
+    let state={logged:null,currentFacility:null,currentFloor:null,currentRoom:null};
+
+    /* ---------- Page nav ---------- */
+    function show(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); window.scrollTo(0,0); }
+
+    // initial
+    show('page-login');
+
+    // mode buttons
+    $('mode-admin').addEventListener('click',()=>{ $('form-admin').style.display='block'; $('form-guest').style.display='none'; });
+    $('mode-guest').addEventListener('click',()=>{ $('form-admin').style.display='none'; $('form-guest').style.display='block'; });
+
+    // admin login
+    $('login-admin').addEventListener('click',()=>{
+      const u=$('admin-user').value.trim(), p=$('admin-pass').value;
+      if(u===ADMIN_U && p===ADMIN_P){ state.logged='admin'; initDashboard(); show('page-dashboard'); $('login-msg').textContent=''; } else $('login-msg').textContent='Sai tài khoản hoặc mật khẩu';
+    });
+
+    // guest login by phone
+    $('login-guest').addEventListener('click',()=>{
+      const phone=$('guest-phone').value.trim(); if(!phone){$('login-msg').textContent='Nhập số điện thoại';return}
+      const cust = DB.customers.find(c=>c.phone===phone);
+      if(!cust){$('login-msg').textContent='Số điện thoại không tồn tại';return}
+      state.logged='guest'; state.guestPhone=phone; showCustomerDetail(cust); show('page-cust-detail');
+    });
+
+    $('btn-logout').addEventListener('click',()=>{ state={}; show('page-login'); });
+
+    /* ---------- Dashboard actions ---------- */
+    $('save-tm').addEventListener('click',()=>{ DB.totalMeters.old = Number($('tm-old').value||0); DB.totalMeters.new = Number($('tm-new').value||0); DB.totalMeters.price = Number($('tm-price').value||3000); save(); alert('Đã lưu đồng hồ tổng'); });
+    $('nav-facilities').addEventListener('click',()=>{ renderFacilities(); show('page-facilities'); });
+
+    /* ---------- Facilities ---------- */
+    $('f-add').addEventListener('click',()=>{ const name=$('f-name').value.trim(); if(!name) return alert('Nhập tên cơ sở'); const id='f'+Date.now(); DB.facilities.push({id,name,floors:[]}); save(); $('f-name').value=''; renderFacilities(); populateAssignRooms(); });
+    function renderFacilities(){ const el=$('f-list'); el.innerHTML=''; if(DB.facilities.length===0) el.innerHTML='<div class="card small">Chưa có cơ sở</div>';
+      DB.facilities.forEach(f=>{ const d=document.createElement('div'); d.className='card'; d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${f.name}</strong><div class='small'>${f.floors.length} tầng</div></div><div class='btns'><button class='btn-ghost' data-open='${f.id}'>Mở</button><button class='btn-ghost' data-del='${f.id}'>Xóa</button></div></div>`; el.appendChild(d); });
+      // attach events
+      el.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{ const id=e.target.dataset.open; state.currentFacility=id; renderFloors(); show('page-floors'); }));
+      el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{ if(confirm('Xóa cơ sở?')){ const id=e.target.dataset.del; DB.facilities=DB.facilities.filter(x=>x.id!==id); save(); renderFacilities(); populateAssignRooms(); }}));
+    }
+
+    /* ---------- Floors ---------- */
+    $('f-add-floors').addEventListener('click',()=>{ const n = parseInt($('floor-count').value||0); if(!n || n<=0) return alert('Nhập số tầng hợp lệ'); if(!state.currentFacility) return alert('Chọn cơ sở trước'); const f=DB.facilities.find(x=>x.id===state.currentFacility); const start=f.floors.length+1; for(let i=0;i<n;i++){ f.floors.push({id:'fl'+(start+i),name:`Tầng ${start+i}`,rooms:[]}); } save(); $('floor-count').value=''; renderFloors(); populateAssignRooms(); });
+    function renderFloors(){ const f = DB.facilities.find(x=>x.id===state.currentFacility); $('current-fac-name').textContent = f?f.name:''; const el=$('floor-list'); el.innerHTML=''; if(!f) return; if(f.floors.length===0) el.innerHTML='<div class="card small">Chưa có tầng</div>';
+      f.floors.forEach(fl=>{ const d=document.createElement('div'); d.className='list-item'; d.innerHTML = `<div><strong>${fl.name}</strong><div class='small'>${fl.rooms.length} phòng</div></div><div class='btns'><button class='btn-ghost' data-open='${fl.id}'>Mở</button><button class='btn-ghost' data-del='${fl.id}'>Xóa</button></div>`; el.appendChild(d); });
+      el.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{ const id=e.target.dataset.open; state.currentFloor=id; renderRooms(); show('page-rooms'); }));
+      el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{ if(confirm('Xóa tầng?')){ const id=e.target.dataset.del; const f=DB.facilities.find(x=>x.id===state.currentFacility); f.floors=f.floors.filter(x=>x.id!==id); save(); renderFloors(); populateAssignRooms(); }}));
+    }
+
+    /* ---------- Rooms ---------- */
+    $('add-room').addEventListener('click',()=>{ const code=$('room-code').value.trim(); if(!code) return alert('Nhập mã phòng'); const f=DB.facilities.find(x=>x.id===state.currentFacility); const fl=f.floors.find(x=>x.id===state.currentFloor); fl.rooms.push({id:'r'+Date.now(),code,customers:[]}); save(); $('room-code').value=''; renderRooms(); populateAssignRooms(); });
+    function renderRooms(){ const f=DB.facilities.find(x=>x.id===state.currentFacility); const fl=f?f.floors.find(x=>x.id===state.currentFloor):null; $('room-fac').textContent = f?f.name:''; $('room-floor').textContent = fl?fl.name:''; const el=$('room-list'); el.innerHTML=''; if(!fl) return; if(fl.rooms.length===0) el.innerHTML='<div class="card small">Chưa có phòng</div>';
+      fl.rooms.forEach(r=>{ const d=document.createElement('div'); d.className='list-item'; d.innerHTML = `<div><strong>${r.code}</strong><div class='small'>${r.customers.length} khách</div></div><div class='btns'><button class='btn-ghost' data-open='${r.id}'>Mở</button><button class='btn-ghost' data-del='${r.id}'>Xóa</button></div>`; el.appendChild(d); });
+      el.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{ const id=e.target.dataset.open; const f=DB.facilities.find(x=>x.id===state.currentFacility); const fl=f.floors.find(x=>x.id===state.currentFloor); const r=fl.rooms.find(x=>x.id===id); showRoomCustomers(r); }));
+      el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{ if(confirm('Xóa phòng?')){ const id=e.target.dataset.del; const f=DB.facilities.find(x=>x.id===state.currentFacility); const fl=f.floors.find(x=>x.id===state.currentFloor); fl.rooms=fl.rooms.filter(x=>x.id!==id); save(); renderRooms(); populateAssignRooms(); }}));
+    }
+
+    function showRoomCustomers(room){ let html=''; if(room.customers.length===0) html='<div class="card small">Chưa có khách</div>'; else{ room.customers.forEach(cid=>{ const c=DB.customers.find(x=>x.id===cid); if(!c) return; html+=`<div class="list-item"><div><strong>${c.name}</strong><div class='small'>${c.phone} · ${c.people} người</div></div><div class='btns'><button class='btn-ghost' data-open='${c.id}'>Mở</button></div></div>`; }); }
+      const container = document.createElement('div'); container.className='card'; container.innerHTML = `<h4>Khách trong phòng ${room.code}</h4>${html||''}`;
+      // append modal-like by replacing room-list area
+      $('room-list').innerHTML=''; $('room-list').appendChild(container);
+      container.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{ const id=e.target.dataset.open; const c=DB.customers.find(x=>x.id===id); showCustomerDetail(c); show('page-cust-detail'); }));
+    }
+
+    /* ---------- Customers ---------- */
+    function populateAssignRooms(){ const sel=$('assign-room-select'); sel.innerHTML=''; const def=document.createElement('option'); def.value=''; def.textContent='Gán phòng (tuỳ chọn)'; sel.appendChild(def);
+      DB.facilities.forEach(f=>{ f.floors.forEach(fl=>{ fl.rooms.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent = `${f.name} · ${fl.name} · ${r.code}`; sel.appendChild(o); }) }); }); }
+    populateAssignRooms();
+
+    $('save-cust').addEventListener('click',()=>{ const name=$('c-name').value.trim(), phone=$('c-phone').value.trim(); if(!name||!phone) return alert('Nhập tên và số điện thoại'); if(DB.customers.find(x=>x.phone===phone)) return alert('Số điện thoại đã tồn tại'); const id='c'+Date.now(); const cust={id,name,phone,people:Number($('c-people').value||0),bikes:Number($('c-bikes').value||0),contractDuration:Number($('c-contract').value||0),startDate:$('c-start').value||'',roomPrice:Number($('c-roomprice').value||0),deposit:Number($('c-deposit').value||0),elecOld:Number($('c-elec-old').value||0),elecNew:Number($('c-elec-new').value||0),services:{wifi:Number($('svc-wifi').value||0),water:Number($('svc-water').value||0),trash:Number($('svc-trash').value||0),wash:Number($('svc-wash').value||0),dry:Number($('svc-dry').value||0),filter:Number($('svc-filter').value||0),clean:Number($('svc-clean').value||0)}}; DB.customers.push(cust); const roomId = $('assign-room-select').value; if(roomId){ for(const f of DB.facilities){ for(const fl of f.floors){ const r = fl.rooms.find(x=>x.id===roomId); if(r){ r.customers.push(cust.id); } } } } save(); clearCustForm(); renderCustomerList(); populateAssignRooms(); alert('Lưu khách thành công'); });
+
+    function clearCustForm(){ ['c-name','c-phone','c-people','c-bikes','c-contract','c-start','c-roomprice','c-deposit','c-elec-old','c-elec-new','svc-wifi','svc-water','svc-trash','svc-wash','svc-dry','svc-filter','svc-clean'].forEach(id=>{ const el=$(id); if(el) el.value=''; }); $('assign-room-select').value=''; }
+
+    function renderCustomerList(){ const el=$('cust-list'); el.innerHTML=''; if(DB.customers.length===0) el.innerHTML='<div class="card small">Chưa có khách</div>'; DB.customers.forEach(c=>{ const d=document.createElement('div'); d.className='list-item'; d.innerHTML=`<div><strong>${c.name}</strong><div class='small'>${c.phone} · ${c.people} người</div></div><div class='btns'><button class='btn-ghost' data-open='${c.id}'>Mở</button><button class='btn-ghost' data-del='${c.id}'>Xóa</button></div>`; el.appendChild(d); }); el.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{ const id=e.target.dataset.open; const c=DB.customers.find(x=>x.id===id); showCustomerDetail(c); show('page-cust-detail'); })); el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{ if(confirm('Xóa khách?')){ const id=e.target.dataset.del; DB.customers=DB.customers.filter(x=>x.id!==id); // remove from rooms
+          DB.facilities.forEach(f=>f.floors.forEach(fl=>fl.rooms.forEach(r=>{ r.customers = r.customers.filter(cid=>cid!==id); }))); save(); renderCustomerList(); populateAssignRooms(); }})); }
+    renderFacilities(); renderCustomerList();
+
+    /* ---------- Customer detail & billing ---------- */
+    $('back-custs').addEventListener('click',()=>{ show('page-customers'); });
+    function showCustomerDetail(c){ $('cd-name').textContent = c.name; const area=$('cd-area'); area.innerHTML=''; const endDate = (c.startDate)?(function(){try{const d=new Date(c.startDate); d.setMonth(d.getMonth()+Number(c.contractDuration||0)); return d.toISOString().slice(0,10);}catch(e){return '-';}})() : '-'; const div=document.createElement('div'); div.className='card'; div.innerHTML = `<div><strong>${c.name}</strong><div class='small'>${c.phone} · ${c.people} người · ${c.bikes} xe</div></div><div style='height:8px'></div><div class='small'>Bắt đầu: ${c.startDate||'-'} · Thời hạn: ${c.contractDuration||0} tháng · Kết thúc: ${endDate}</div><div style='height:8px'></div><div class='small'>Tiền phòng: ${fmt(c.roomPrice)} · Tiền cọc: ${fmt(c.deposit)}</div>`; area.appendChild(div);
+
+      const elec=document.createElement('div'); elec.className='card'; elec.innerHTML = `<div class='small'>Số điện cũ / mới (phòng)</div><div class='row'><input id='view-old' value='${c.elecOld||0}' /><input id='view-new' value='${c.elecNew||0}' /></div><div style='height:8px'></div><div class='small'>Giá điện (VNĐ/số)</div><input id='view-price' value='${DB.totalMeters.price||3000}' /><div style='height:8px'></div><div style='display:flex;gap:8px'><button id='calc-save' class='btn'>Tính & Lưu</button><button id='export-bill' class='btn-ghost'>Xuất hoá đơn</button></div><div id='bill-area' class='small' style='margin-top:8px'></div>`;
+      area.appendChild(elec);
+
+      document.getElementById('calc-save').addEventListener('click',()=>{ const old=Number($('view-old').value||0), nw=Number($('view-new').value||0), price=Number($('view-price').value||DB.totalMeters.price||3000); c.elecOld=old; c.elecNew=nw; DB.totalMeters.price=price; save(); const bill = calcBill(c); $('bill-area').innerHTML = formatBillHtml(bill); alert('Đã tính và lưu'); renderCustomerList(); });
+      document.getElementById('export-bill').addEventListener('click',()=>{ const bill = calcBill(c); const text = generateBillText(c,bill); const blob=new Blob([text],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`HoaDon_${c.name.split(' ').join('_')}_${new Date().toISOString().slice(0,10)}.txt`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
+    }
+
+    function calcBill(c){ const price = Number(DB.totalMeters.price||3000); const elecRoomQty = (Number(c.elecNew||0)-Number(c.elecOld||0)); const elecRoom = elecRoomQty * price; let totalRooms = 0; let totalPeople=0; DB.customers.forEach(x=>{ totalRooms += (Number(x.elecNew||0)-Number(x.elecOld||0)); totalPeople += Number(x.people||0); }); const totalRoomsVN = totalRooms * price; const meterDiff = Number(DB.totalMeters.new||0)-Number(DB.totalMeters.old||0); const commonVN = Math.max(0,(meterDiff - totalRooms)) * price; const sharePerPerson = totalPeople? (commonVN / totalPeople) : 0; const svc = c.services || {}; const svcSumPerPerson = (Number(svc.water||0)+Number(svc.trash||0)+Number(svc.wash||0)+Number(svc.dry||0)+Number(svc.filter||0)+Number(svc.clean||0)); const svcForRoom = Number(svc.wifi||0) + svcSumPerPerson * Number(c.people||0); const total = Number(c.roomPrice||0) + svcForRoom + elecRoom + (sharePerPerson * Number(c.people||0)); return {elecRoomQty,elecRoom,totalRooms,totalRoomsVN,meterDiff,commonVN,sharePerPerson,svcForRoom,total}; }
+    function formatBillHtml(b){ return `Tiền điện phòng = ${fmt(b.elecRoom)}<br>Tổng điện phòng toàn cơ sở = ${b.totalRooms} số (${fmt(b.totalRoomsVN)})<br>Đồng hồ tổng (chênh) = ${b.meterDiff} số (${fmt(b.meterDiff*DB.totalMeters.price)})<br>Tiền điện chung = ${fmt(b.commonVN)} (chia ${fmt(b.sharePerPerson)}/người)<br>Tiền dịch vụ (phòng) = ${fmt(b.svcForRoom)}<br><strong>Tổng cần đóng: ${fmt(b.total)}</strong>`; }
+    function generateBillText(c,b){ const lines=[]; lines.push('HÓA ĐƠN THANH TOÁN'); lines.push('Khách: '+c.name); lines.push('SĐT: '+c.phone); lines.push('Ngày: '+new Date().toISOString().slice(0,10)); lines.push(''); lines.push('Tiền phòng: '+fmt(c.roomPrice)); lines.push('Tiền dịch vụ (phòng): '+fmt(b.svcForRoom)); lines.push('Tiền điện phòng: '+fmt(b.elecRoom)); lines.push('Tiền điện chung (phòng chia): '+fmt(b.sharePerPerson * c.people)); lines.push(''); lines.push('Tổng cần đóng: '+fmt(b.total)); return lines.join('
+'); }
+
+    /* ---------- Misc: navigation and exports ---------- */
+    // back buttons
+    $('back-dash').addEventListener('click',()=>{ show('page-dashboard'); });
+    $('back-facilities').addEventListener('click',()=>{ show('page-facilities'); });
+    $('back-floors').addEventListener('click',()=>{ show('page-floors'); });
+    $('back-rooms').addEventListener('click',()=>{ show('page-rooms'); });
+    $('back-custs').addEventListener('click',()=>{ show('page-customers'); });
+
+    // from dashboard quick nav
+    $('nav-facilities').addEventListener('click',()=>{ renderFacilities(); show('page-facilities'); });
+
+    // export db
+    $('export-json').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='nhacuakhanh_db.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
+
+    // when showing floors/rooms ensure current facility/floor set
+    // set current floor when opening floors
+    // helpers to open floors when clicking 'Mở' earlier already set state.currentFacility
+
+    // ensure selectors populated
+    renderFacilities(); renderCustomerList(); populateAssignRooms();
+
+  </script>
+</body>
+</html>
